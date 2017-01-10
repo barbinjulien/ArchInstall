@@ -33,5 +33,40 @@ print_info "This Install Scripts are a set of Bash scripts that simplify Arch in
 check_boot_system
 check_connection
 check_trim
-pacman -Sy
+# pacman -Sy ## Not needed for the moment
 pause_function
+
+while true
+do
+  print_title "ARCHLINUX INSTALL - https://github.com/barbinjulien/ArchInstall"
+  echo " 1) $(mainmenu_item "${checklist[1]}"  "Select Keymap"            "${KEYMAP}" )"
+  echo " 2) $(mainmenu_item "${checklist[2]}"  "Select Editor"            "${EDITOR}" )"
+  echo " 3) $(mainmenu_item "${checklist[3]}"  "Configure Mirrorlist"     "${country_name} (${country_code})" )"
+  echo ""
+  echo " d) Done"
+  echo ""
+  read_input_options
+  for OPT in ${OPTIONS[@]}; do
+    case "$OPT" in
+      1)
+        select_keymap
+        checklist[1]=1
+        ;;
+      2)
+        select_editor
+        checklist[2]=1
+        ;;
+      3)
+        configure_mirrorlist
+        checklist[3]=1
+        ;;
+      "d")
+        donesetup
+        #finish
+        ;;
+      *)
+        invalid_option
+        ;;
+    esac
+  done
+done
