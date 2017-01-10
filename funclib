@@ -22,6 +22,7 @@
 # Run this script after your first boot with archlinux (as root)
 
 #GLOBAL VARIABLES {{{
+  checklist=( 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 )
   UEFI=0 # BOOTLOADER CHECK
   XPINGS=0 # CONNECTION CHECK
   TRIM=0 # TRIM CHECK
