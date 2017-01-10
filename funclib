@@ -330,6 +330,7 @@
           print_line >>"$LOG" 
           pacman -S --noconfirm --needed ${PKG} >>"$LOG" 2>&1 &
           pid=$!;progress $pid
+          pause_function
         else
           cecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Installing (${_pkg_repo}) ${Bold}${PKG}${Reset} exists "
         fi
