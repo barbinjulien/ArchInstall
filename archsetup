@@ -61,7 +61,7 @@ do
         checklist[1]=1
         ;;
       2)
-        select_editor
+        select_clieditor
         checklist[2]=1
         ;;
       3)
