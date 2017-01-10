@@ -1,0 +1,67 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+#Created by barbinjulien mailto: barbinjulien[at]gmail[dot]com
+#-------------------------------------------------------------------------------
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#-------------------------------------------------------------------------------
+# Strongly inspired by: https://github.com/helmuthdu/aui
+
+#-------------------------------------------------------------------------------
+# Run this script after your first boot with archlinux (as root)
+
+#COMMON FUNCTIONS {{{
+  pause_function() { #{{{
+    print_line
+    if [[ $AUTOMATIC_MODE -eq 0 ]]; then
+      read -e -sn 1 -p "Press enter to continue..."
+    fi
+  } #}}}
+  #-------------------------------------------------------------------------------
+  ##### Print functionalities
+  print_line() { #{{{
+    printf "%$(tput cols)s\n"|tr ' ' '-'
+  } #}}}
+  print_title() { #{{{
+    clear
+    print_line
+    echo -e "# ${Bold}$1${Reset}"
+    print_line
+    echo ""
+  } #}}}
+  print_info() { #{{{
+    echo -e "${Bold}$1${Reset}\n"
+  } #}}}
+  #-------------------------------------------------------------------------------
+  ##### Check functionalities
+  check_boot_system() { #{{{
+    if [[ "$(cat /sys/class/dmi/id/sys_vendor)" == 'Apple Inc.' ]] || [[ "$(cat /sys/class/dmi/id/sys_vendor)" == 'Apple Computer, Inc.' ]]; then
+      modprobe -r -q efivars || true  # if MAC
+    else
+      modprobe -q efivarfs            # all others
+    fi
+    if [[ -d "/sys/firmware/efi/" ]]; then
+      ## Mount efivarfs if it is not already mounted
+      if [[ -z $(mount | grep /sys/firmware/efi/efivars) ]]; then
+        mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+      fi
+      UEFI=1
+      echo "UEFI Mode detected"
+    else
+      UEFI=0
+      echo "BIOS Mode detected"
+    fi
+  }
+  #}}}
+#}}}
