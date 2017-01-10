@@ -45,7 +45,16 @@
     echo ""
   } #}}}
   print_info() { #{{{
-    echo -e "${Bold}$1${Reset}\n"
+    T_COLS=`tput cols`
+    echo -e "${Bold}$1${Reset}\n" | fold -sw $(( $T_COLS - 1 ))
+  } #}}}
+  print_warning() { #{{{
+    T_COLS=`tput cols`
+    echo -e "${BYellow}$1${Reset}\n" | fold -sw $(( $T_COLS - 1 ))
+  } #}}}
+  print_danger() { #{{{
+    T_COLS=`tput cols`
+    echo -e "${BRed}$1${Reset}\n" | fold -sw $(( $T_COLS - 1 ))
   } #}}}
   #-------------------------------------------------------------------------------
   ##### Check functionalities
