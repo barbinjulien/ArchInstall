@@ -124,8 +124,5 @@
       fi
       [[ $REPLY -ne 5 ]] && check_connection
     fi
-    echo "Connection Detected"
-  else
-    echo "No Connection Detected"
   } #}}}
 #}}}
