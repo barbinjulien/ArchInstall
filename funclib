@@ -21,6 +21,10 @@
 #-------------------------------------------------------------------------------
 # Run this script after your first boot with archlinux (as root)
 
+#GLOBAL VARIABLES {{{
+  UEFI=0 # BOOTLOADER CHECK
+  XPINGS=0 # CONNECTION CHECK
+#}}}
 #COMMON FUNCTIONS {{{
   pause_function() { #{{{
     print_line
@@ -120,5 +124,8 @@
       fi
       [[ $REPLY -ne 5 ]] && check_connection
     fi
+    echo "Connection Detected"
+  else
+    echo "No Connection Detected"
   } #}}}
 #}}}
