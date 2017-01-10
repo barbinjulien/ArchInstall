@@ -78,7 +78,7 @@
   } #}}}
   ncecho() { #{{{
     echo -ne "$1"
-    echo -ne "$1" >>"$LOG"
+    #echo -ne "$1" >>"$LOG"
     tput sgr0
   } #}}}
   spinny() { #{{{
@@ -327,6 +327,7 @@
         esac
         if ! is_package_installed "${PKG}" ; then
           ncecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Installing (${_pkg_repo}) ${Bold}${PKG}${Reset} "
+          print_line >>"$LOG" 
           pacman -S --noconfirm --needed ${PKG} >>"$LOG" 2>&1 &
           pid=$!;progress $pid
         else
