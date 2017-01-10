@@ -64,4 +64,61 @@
     fi
   }
   #}}}
+  check_connection(){ #{{{
+    XPINGS=$(( $XPINGS + 1 ))
+    connection_test() {
+      ping -q -w 1 -c 1 `ip r | grep default | awk 'NR==1 {print $3}'` &> /dev/null && return 1 || return 0
+    }
+    WIRED_DEV=`ip link | grep "ens\|eno\|enp" | awk '{print $2}'| sed 's/://' | sed '1!d'`
+    WIRELESS_DEV=`ip link | grep wlp | awk '{print $2}'| sed 's/://' | sed '1!d'`
+    if connection_test; then
+      print_warning "ERROR! Connection not Found."
+      print_info "Network Setup"
+      local _connection_opts=("Wired Automatic" "Wired Manual" "Wireless" "Configure Proxy" "Skip")
+      PS3="$prompt1"
+      select CONNECTION_TYPE in "${_connection_opts[@]}"; do
+        case "$REPLY" in
+          1)
+            systemctl start dhcpcd@${WIRED_DEV}.service
+            break
+            ;;
+          2)
+            systemctl stop dhcpcd@${WIRED_DEV}.service
+            read -p "IP Address: " IP_ADDR
+            read -p "Submask: " SUBMASK
+            read -p "Gateway: " GATEWAY
+            ip link set ${WIRED_DEV} up
+            ip addr add ${IP_ADDR}/${SUBMASK} dev ${WIRED_DEV}
+            ip route add default via ${GATEWAY}
+            $EDITOR /etc/resolv.conf
+            break
+            ;;
+          3)
+            ip link set ${WIRELESS_DEV} up
+            wifi-menu ${WIRELESS_DEV}
+            break
+            ;;
+          4)
+            read -p "Enter your proxy e.g. protocol://adress:port: " OPTION
+            export http_proxy=$OPTION
+            export https_proxy=$OPTION
+            export ftp_proxy=$OPTION
+            echo "proxy = $OPTION" > ~/.curlrc
+            break
+            ;;
+          5)
+            break
+            ;;
+          *)
+            invalid_option
+            ;;
+        esac
+      done
+      if [[ $XPINGS -gt 2 ]]; then
+        print_warning "Can't establish connection. exiting..."
+        exit 1
+      fi
+      [[ $REPLY -ne 5 ]] && check_connection
+    fi
+  } #}}}
 #}}}
