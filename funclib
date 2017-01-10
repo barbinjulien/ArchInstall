@@ -37,6 +37,8 @@
   PKG_FAIL="${AUI_DIR}/`basename ${0}`_fail_install.log"
   [[ -f $PKG_FAIL ]] && rm -f $PKG_FAIL
   SPIN="/-\|" #SPINNER POSITION
+  AUR=`echo -e "(${BPurple}aur${Reset})"`
+  EXTERNAL=`echo -e "(${BYellow}external${Reset})"`
   # COLORS {{{
     Bold=$(tput bold)
     Underline=$(tput sgr 0 1)
