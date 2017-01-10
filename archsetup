@@ -32,4 +32,6 @@ print_title "https://wiki.archlinux.org/index.php/Installation_guide"
 print_info "This Install Scripts are a set of Bash scripts that simplify Arch installation."
 check_boot_system
 check_connection
+check_trim
+pacman -Sy
 pause_function
