@@ -136,6 +136,9 @@
     T_COLS=`tput cols`
     echo -e "${Bold}$1${Reset}\n" | fold -sw $(( $T_COLS - 1 ))
   } #}}}
+  print_log() { #{{{
+    echo -e "$1\n" >> "$LOG"
+  } #}}}
   print_warning() { #{{{
     T_COLS=`tput cols`
     echo -e "${BYellow}$1${Reset}\n" | fold -sw $(( $T_COLS - 1 ))
@@ -327,12 +330,15 @@
         esac
         if ! is_package_installed "${PKG}" ; then
           ncecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Installing (${_pkg_repo}) ${Bold}${PKG}${Reset} "
-          print_line >>"$LOG" 
+          print_log "Installing (${_pkg_repo}) ${PKG}"
           pacman -S --noconfirm --needed ${PKG} >>"$LOG" 2>&1 &
           pid=$!;progress $pid
           pause_function
         else
           cecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Installing (${_pkg_repo}) ${Bold}${PKG}${Reset} exists "
+          print_line >> "$LOG"
+          print_log "Installing (${_pkg_repo}) ${PKG} exists"
+          pause_function
         fi
       done
     else
@@ -345,6 +351,7 @@
       if is_package_installed "${PKG}" ; then
         if [[ $AUTOMATIC_MODE -eq 1 || $VERBOSE_MODE -eq 0 ]]; then
           ncecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Removing ${Bold}${PKG}${Reset} "
+          print_log "Removing ${PKG}"
           pacman -Rcsn --noconfirm ${PKG} >>"$LOG" 2>&1 &
           pid=$!;progress $pid
         else
