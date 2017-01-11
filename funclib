@@ -313,31 +313,31 @@
     #install packages using pacman
     if [[ $AUTOMATIC_MODE -eq 1 || $VERBOSE_MODE -eq 0 ]]; then
       for PKG in ${1}; do
-        local _pkg_repo=`pacman -Sp --print-format %r ${PKG} | uniq | sed '1!d'`
-        case $_pkg_repo in
+        local _pkg_repo-or=`pacman -Sp --print-format %r ${PKG} | uniq | sed '1!d'`
+        case $_pkg_repo-or in
           "core")
-            _pkg_repo="${BRed}${_pkg_repo}${Reset}"
+            _pkg_repo="${BRed}${_pkg_repo-or}${Reset}"
             ;;
           "extra")
-            _pkg_repo="${BYellow}${_pkg_repo}${Reset}"
+            _pkg_repo="${BYellow}${_pkg_repo-or}${Reset}"
             ;;
           "community")
-            _pkg_repo="${BGreen}${_pkg_repo}${Reset}"
+            _pkg_repo="${BGreen}${_pkg_repo-or}${Reset}"
             ;;
           "multilib")
-            _pkg_repo="${BCyan}${_pkg_repo}${Reset}"
+            _pkg_repo="${BCyan}${_pkg_repo-or}${Reset}"
             ;;
         esac
         if ! is_package_installed "${PKG}" ; then
           ncecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Installing (${_pkg_repo}) ${Bold}${PKG}${Reset} "
-          print_log "Installing repository: ${_pkg_repo}  package: ${PKG}"
+          print_log "Installing repository: ${_pkg_repo-or}  package: ${PKG}"
           pacman -S --noconfirm --needed ${PKG} >>"$LOG" 2>&1 &
           pid=$!;progress $pid
           pause_function
         else
           cecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Installing (${_pkg_repo}) ${Bold}${PKG}${Reset} exists "
           print_line >> "$LOG"
-          print_log "Installing (${_pkg_repo}) ${PKG} exists"
+          print_log "Installing (${_pkg_repo-or}) ${PKG} exists"
           pause_function
         fi
       done
