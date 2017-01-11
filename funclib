@@ -330,7 +330,7 @@
         esac
         if ! is_package_installed "${PKG}" ; then
           ncecho " ${BBlue}[${Reset}${Bold}X${BBlue}]${Reset} Installing (${_pkg_repo}) ${Bold}${PKG}${Reset} "
-          print_log "Installing (${_pkg_repo}) ${PKG}"
+          print_log "Installing repository: ${_pkg_repo}  package: ${PKG}"
           pacman -S --noconfirm --needed ${PKG} >>"$LOG" 2>&1 &
           pid=$!;progress $pid
           pause_function
